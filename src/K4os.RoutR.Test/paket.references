@@ -1,0 +1,6 @@
+﻿DryIoc.dll
+DryIoc.Microsoft.DependencyInjection
+
+xunit
+xunit.runner.visualstudio
+Microsoft.NET.Test.Sdk

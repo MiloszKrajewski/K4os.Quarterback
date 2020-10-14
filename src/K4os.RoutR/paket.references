@@ -1,0 +1,3 @@
+﻿Microsoft.Extensions.Logging.Abstractions
+Microsoft.Extensions.DependencyInjection.Abstractions
+System.ValueTuple

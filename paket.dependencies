@@ -1,0 +1,21 @@
+storage none
+framework auto-detect
+source https://www.nuget.org/api/v2
+
+nuget Microsoft.Extensions.DependencyInjection ~> 2
+nuget Microsoft.Extensions.Logging ~> 2
+
+nuget Microsoft.Extensions.DependencyInjection.Abstractions ~> 2
+nuget Microsoft.Extensions.Logging.Abstractions ~> 2
+
+nuget System.Reactive
+nuget System.Interactive
+
+nuget DryIoc.dll ~> 4
+nuget DryIoc.Microsoft.DependencyInjection ~> 3
+
+nuget BenchmarkDotNet
+
+nuget xunit
+nuget xunit.runner.visualstudio
+nuget Microsoft.NET.Test.Sdk
