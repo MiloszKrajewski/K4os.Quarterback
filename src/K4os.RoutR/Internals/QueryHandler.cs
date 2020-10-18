@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace K4os.RoutR.Internals
 {
-	public static class QueryHandler
+	internal static class QueryHandler
 	{
 		private const BindingFlags DefaultBindingFlags =
 			BindingFlags.Static | BindingFlags.NonPublic;

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace K4os.RoutR.Internals
 {
-	public static class TypeExtensions
+	internal static class TypeExtensions
 	{
 		/// <summary>
 		/// Type distance cache. It should Concurrent dictionary but it is not available

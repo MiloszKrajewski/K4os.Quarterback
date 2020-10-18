@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using K4os.RoutR.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace K4os.RoutR
+namespace K4os.RoutR.Internals
 {
-	public class EventHandler
+	internal static class EventHandler
 	{
 		private const BindingFlags DefaultBindingFlags =
 			BindingFlags.Static | BindingFlags.NonPublic;

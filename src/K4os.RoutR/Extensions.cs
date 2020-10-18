@@ -38,12 +38,12 @@ namespace K4os.RoutR
 			var first = true;
 			var result = fallback;
 			var resultScore = default(R);
-			
+
 			foreach (var item in collection)
 			{
-				var itemScore = default(R);
-				if (!first && (itemScore = score(item)).CompareTo(resultScore) >= 0) 
-					continue;
+				var itemScore = score(item);
+				var replace = first || itemScore.CompareTo(resultScore) < 0;
+				if (!replace) continue;
 
 				result = item;
 				resultScore = itemScore;
