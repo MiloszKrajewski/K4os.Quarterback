@@ -6,17 +6,17 @@
   </PropertyGroup>
   <PropertyGroup>
     <Product>K4os.RoutR</Product>
-    <Authors>...</Authors>
-    <Copyright>...</Copyright>
-    <Description>...</Description>
-    <RepositoryUrl>https://.../K4os.RoutR</RepositoryUrl>
+    <Authors>Milosz Krajewski</Authors>
+    <Copyright>Milosz Krajewski</Copyright>
+    <Description>In-process message broker</Description>
+    <RepositoryUrl>https://github.com/MiloszKrajewski/K4os.RoutR</RepositoryUrl>
+    <PackageId>$(AssemblyName)</PackageId>
+    <PackageProjectUrl>https://github.com/MiloszKrajewski/K4os.RoutR</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/MiloszKrajewski/K4os.RoutR/main/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
   <PropertyGroup>
+    <PackageTags>CQRS message mediator broker</PackageTags>
     <!--
-    <PackageId>K4os.RoutR</PackageId>
-    <PackageTags>...</PackageTags>
-    <PackageLicenseUrl>https://.../LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://.../K4os.RoutR</PackageProjectUrl>
     <PackageIconUrl>https://.../K4os.RoutR/icon.png</PackageIconUrl>
     -->
   </PropertyGroup>
