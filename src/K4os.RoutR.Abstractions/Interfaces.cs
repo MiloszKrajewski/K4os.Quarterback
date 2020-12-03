@@ -28,24 +28,24 @@ namespace K4os.RoutR.Abstractions
 		Task Handle(TEvent @event, CancellationToken token);
 	}
 
-	/// <summary>Marker interface for query handlers, do no use directly.</summary>
-	/// <typeparam name="TQuery">Type of query.</typeparam>
-	[Obsolete("Use IQueryHandle<TQuery, TResponse> instead")]
-	public interface IQueryHandler<in TQuery> { }
+	/// <summary>Marker interface for request handlers, do no use directly.</summary>
+	/// <typeparam name="TRequest">Type of request.</typeparam>
+	[Obsolete("Use IRequestHandler<TRequest, TResponse> instead")]
+	public interface IRequestHandlerPartialMarker<in TRequest> { }
 
-	/// <summary>Interface for query handlers.</summary>
-	/// <typeparam name="TQuery">Type of query.</typeparam>
+	/// <summary>Interface for request handlers.</summary>
+	/// <typeparam name="TRequest">Type of request.</typeparam>
 	/// <typeparam name="TResponse">Type of response.</typeparam>
-	public interface IQueryHandler<in TQuery, TResponse>:
+	public interface IRequestHandler<in TRequest, TResponse>:
 #pragma warning disable 618
-		IQueryHandler<TQuery>
+		IRequestHandlerPartialMarker<TRequest>
 #pragma warning restore 618
 	{
-		/// <summary>Query handler.</summary>
-		/// <param name="query">Query.</param>
+		/// <summary>Request handler.</summary>
+		/// <param name="request">Request.</param>
 		/// <param name="token"><see cref="CancellationToken"/></param>
 		/// <returns>Result of execution.</returns>
-		Task<TResponse> Handle(TQuery query, CancellationToken token);
+		Task<TResponse> Handle(TRequest request, CancellationToken token);
 	}
 
 	/// <summary>Command pipeline processor.</summary>
@@ -85,24 +85,25 @@ namespace K4os.RoutR.Abstractions
 	}
 
 	/// <summary>
-	/// Query processing pipeline.
+	/// Request processing pipeline.
 	/// </summary>
 	/// <typeparam name="THandler">Wrapped handler.</typeparam>
-	/// <typeparam name="TQuery">Handled query.</typeparam>
-	/// <typeparam name="TResponse">Query response.</typeparam>
-	public interface IQueryPipeline<in THandler, in TQuery, TResponse>
-		where THandler: IQueryHandler<TQuery, TResponse>
+	/// <typeparam name="TRequest">Handled request.</typeparam>
+	/// <typeparam name="TResponse">Request response.</typeparam>
+	public interface IRequestPipeline<in THandler, in TRequest, TResponse>
+		where THandler: IRequestHandler<TRequest, TResponse>
 	{
 		/// <summary>
 		/// Wraps execution of a handler. Please note, you need to call <c>next()</c>
 		/// to continue execution of this chain.
 		/// </summary>
 		/// <param name="handler">Handler being executed.</param>
-		/// <param name="query">Query being handled.</param>
+		/// <param name="request">Request being handled.</param>
 		/// <param name="next">Next chunk in processing pipeline.</param>
 		/// <param name="token"><see cref="CancellationToken"/></param>
 		/// <returns>Result of execution.</returns>
 		Task<TResponse> Handle(
-			THandler handler, TQuery query, Func<Task<TResponse>> next, CancellationToken token);
+			THandler handler, TRequest request, Func<Task<TResponse>> next,
+			CancellationToken token);
 	}
 }
