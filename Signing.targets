@@ -2,8 +2,8 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' and Exists('../../K4os.RoutR.snk')">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' and Exists('../../K4os.Quarterback.snk')">
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../K4os.RoutR.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>../../K4os.Quarterback.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 </Project>

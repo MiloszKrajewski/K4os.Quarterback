@@ -5,14 +5,14 @@
     <FileVersion>0.0.2</FileVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <Product>K4os.RoutR</Product>
+    <Product>K4os.Quarterback</Product>
     <Authors>Milosz Krajewski</Authors>
     <Copyright>Milosz Krajewski</Copyright>
     <Description>In-process message broker</Description>
-    <RepositoryUrl>https://github.com/MiloszKrajewski/K4os.RoutR</RepositoryUrl>
+    <RepositoryUrl>https://github.com/MiloszKrajewski/K4os.Quarterback</RepositoryUrl>
     <PackageId>$(AssemblyName)</PackageId>
-    <PackageProjectUrl>https://github.com/MiloszKrajewski/K4os.RoutR</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/MiloszKrajewski/K4os.RoutR/main/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/MiloszKrajewski/K4os.Quarterback</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/MiloszKrajewski/K4os.Quarterback/main/LICENSE</PackageLicenseUrl>
     <PackageTags>CQRS message mediator broker</PackageTags>
     <!--
     <PackageIconUrl>https://.../K4os.RoutR/icon.png</PackageIconUrl>
