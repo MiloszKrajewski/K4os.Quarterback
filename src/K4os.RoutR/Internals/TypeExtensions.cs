@@ -13,8 +13,8 @@ namespace K4os.RoutR.Internals
 		/// Type distance cache. It should Concurrent dictionary but it is not available
 		/// on all flavors of Portable Class Library.
 		/// </summary>
-		private static readonly ConcurrentDictionary<(Type, Type), int> TypeDistanceMap =
-			new ConcurrentDictionary<(Type, Type), int>();
+		private static readonly ConcurrentDictionary<(Type, Type), int> 
+			TypeDistanceMap = new();
 
 		/// <summary>Checks if child type inherits (or implements) from parent.</summary>
 		/// <param name="child">The child.</param>
@@ -35,10 +35,9 @@ namespace K4os.RoutR.Internals
 			if (grandparent is null)
 				throw new ArgumentNullException(nameof(grandparent));
 
-			if (child == grandparent)
-				return 0;
-
-			return TypeDistanceMap.GetOrAdd((child, grandparent), ResolveDistance);
+			return child == grandparent 
+				? 0 
+				: TypeDistanceMap.GetOrAdd((child, grandparent), ResolveDistance);
 		}
 
 		private static int ResolveDistance((Type, Type) types)
@@ -51,15 +50,13 @@ namespace K4os.RoutR.Internals
 				throw new ArgumentException(
 					$"Type '{child.Name}' does not inherit nor implements '{grandparent.Name}'");
 
-			int Up1(int value) => value == int.MaxValue ? value : value + 1;
-
-			var distances = GetIntermediateParents(child, grandparent)
-				.Select(t => Up1(DistanceFrom(t, grandparent)))
-				.ToArray();
+			static int Inc(int value) => value == int.MaxValue ? value : value + 1;
 
 			// this may happen with covariant interfaces
 			// they are "assignable from" but not "inheriting" from each other
-			return distances.Length == 0 ? int.MaxValue : distances.Min();
+			return GetIntermediateParents(child, grandparent)
+				.Select(t => Inc(DistanceFrom(t, grandparent)))
+				.MinBy(static x => x, int.MaxValue);
 		}
 
 		/// <summary>Gets the list of parent types which also inherit for grandparent.</summary>

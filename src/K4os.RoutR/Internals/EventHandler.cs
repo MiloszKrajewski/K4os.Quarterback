@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -22,7 +23,7 @@ namespace K4os.RoutR.Internals
 			var handlers = provider.GetServices(handlerType);
 			var handlerInvoker = GetHandlerInvoker(eventType);
 
-			Task Handle(object handler) => 
+			Task Handle(object handler) =>
 				Execute(provider, eventType, handler, handlerInvoker, @event, token);
 
 			return handlers.Select(Handle).WhenAll();
@@ -31,7 +32,7 @@ namespace K4os.RoutR.Internals
 		private static Task Execute(
 			IServiceProvider provider,
 			Type eventType,
-			object handler, HandlerInvoker handlerInvoker, object @event, 
+			object handler, HandlerInvoker handlerInvoker, object @event,
 			CancellationToken token)
 		{
 			var actualHandlerType = handler.GetType();
@@ -41,11 +42,11 @@ namespace K4os.RoutR.Internals
 		}
 
 		private static Task Execute(
-			Type pipelineType, object[] pipeline,
+			Type pipelineType, IReadOnlyList<object> pipeline,
 			object handler, HandlerInvoker handlerInvoker, object @event,
 			CancellationToken token)
 		{
-			if (pipeline.Length <= 0)
+			if (pipeline.Count <= 0)
 				return handlerInvoker(handler, @event, token);
 
 			Func<Task> next = () => handlerInvoker(handler, @event, token);
@@ -54,14 +55,14 @@ namespace K4os.RoutR.Internals
 			Func<Task> Combine(object wrapper, Func<Task> rest) =>
 				() => pipelineInvoker(wrapper, handler, @event, rest, token);
 
-			for (var i = pipeline.Length - 1; i >= 0; i--)
+			for (var i = pipeline.Count - 1; i >= 0; i--)
 				next = Combine(pipeline[i], next);
 
 			return next();
 		}
 
-		private static readonly ConcurrentDictionary<Type, Type> HandlerTypes =
-			new ConcurrentDictionary<Type, Type>();
+		private static readonly ConcurrentDictionary<Type, Type>
+			HandlerTypes = new();
 
 		private static Type GetHandlerType(Type eventType) =>
 			HandlerTypes.GetOrAdd(eventType, NewHandleType);
@@ -69,8 +70,8 @@ namespace K4os.RoutR.Internals
 		private static Type NewHandleType(Type eventType) =>
 			typeof(IEventHandler<>).MakeGenericType(eventType);
 
-		private static readonly ConcurrentDictionary<(Type, Type), Type> PipelineTypes =
-			new ConcurrentDictionary<(Type, Type), Type>();
+		private static readonly ConcurrentDictionary<(Type, Type), Type>
+			PipelineTypes = new();
 
 		private static Type GetPipelineType(Type handlerType, Type eventType) =>
 			PipelineTypes.GetOrAdd((handlerType, eventType), NewPipelineType);
@@ -81,8 +82,8 @@ namespace K4os.RoutR.Internals
 		private delegate Task HandlerInvoker(
 			object handler, object @event, CancellationToken token);
 
-		private static readonly ConcurrentDictionary<Type, HandlerInvoker> HandlerInvokers =
-			new ConcurrentDictionary<Type, HandlerInvoker>();
+		private static readonly ConcurrentDictionary<Type, HandlerInvoker>
+			HandlerInvokers = new();
 
 		private static HandlerInvoker GetHandlerInvoker(Type eventType) =>
 			HandlerInvokers.GetOrAdd(eventType, NewHandlerInvoker);
@@ -112,8 +113,8 @@ namespace K4os.RoutR.Internals
 			object handler, object @event, Func<Task> next,
 			CancellationToken token);
 
-		private static readonly ConcurrentDictionary<Type, PipelineInvoker> PipelineInvokers =
-			new ConcurrentDictionary<Type, PipelineInvoker>();
+		private static readonly ConcurrentDictionary<Type, PipelineInvoker>
+			PipelineInvokers = new();
 
 		private static PipelineInvoker GetPipelineInvoker(Type pipelineType) =>
 			PipelineInvokers.GetOrAdd(pipelineType, NewPipelineInvoker);
@@ -123,8 +124,8 @@ namespace K4os.RoutR.Internals
 			object handler, object @event, Func<Task> next,
 			CancellationToken token)
 			where THandler: IEventHandler<TEvent> =>
-			((IEventPipeline<THandler, TEvent>) wrapper).Handle(
-				(THandler) handler, (TEvent) @event, next, token);
+			((IEventPipeline<THandler, TEvent>) wrapper)
+			.Handle((THandler) handler, (TEvent) @event, next, token);
 
 		private static PipelineInvoker NewPipelineInvoker(Type pipelineType)
 		{

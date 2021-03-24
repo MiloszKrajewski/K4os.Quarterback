@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -27,11 +28,11 @@ namespace K4os.RoutR.Internals
 		}
 
 		private static Task Execute(
-			Type pipelineType, object[] pipeline,
+			Type pipelineType, IReadOnlyList<object> pipeline,
 			object handler, HandlerInvoker handlerInvoker, object command,
 			CancellationToken token)
 		{
-			if (pipeline.Length <= 0)
+			if (pipeline.Count <= 0)
 				return handlerInvoker(handler, command, token);
 
 			Func<Task> next = () => handlerInvoker(handler, command, token);
@@ -40,14 +41,14 @@ namespace K4os.RoutR.Internals
 			Func<Task> Combine(object wrapper, Func<Task> rest) =>
 				() => pipelineInvoker(wrapper, handler, command, rest, token);
 
-			for (var i = pipeline.Length - 1; i >= 0; i--)
+			for (var i = pipeline.Count - 1; i >= 0; i--)
 				next = Combine(pipeline[i], next);
 
 			return next();
 		}
 
-		private static readonly ConcurrentDictionary<Type, Type> HandlerTypes =
-			new ConcurrentDictionary<Type, Type>();
+		private static readonly ConcurrentDictionary<Type, Type>
+			HandlerTypes = new();
 
 		private static Type GetHandlerType(Type commandType) =>
 			HandlerTypes.GetOrAdd(commandType, NewHandleType);
@@ -55,8 +56,8 @@ namespace K4os.RoutR.Internals
 		private static Type NewHandleType(Type commandType) =>
 			typeof(ICommandHandler<>).MakeGenericType(commandType);
 
-		private static readonly ConcurrentDictionary<(Type, Type), Type> PipelineTypes =
-			new ConcurrentDictionary<(Type, Type), Type>();
+		private static readonly ConcurrentDictionary<(Type, Type), Type>
+			PipelineTypes = new();
 
 		private static Type GetPipelineType(Type handlerType, Type commandType) =>
 			PipelineTypes.GetOrAdd((handlerType, commandType), NewPipelineType);
@@ -67,8 +68,8 @@ namespace K4os.RoutR.Internals
 		private delegate Task HandlerInvoker(
 			object handler, object command, CancellationToken token);
 
-		private static readonly ConcurrentDictionary<Type, HandlerInvoker> HandlerInvokers =
-			new ConcurrentDictionary<Type, HandlerInvoker>();
+		private static readonly ConcurrentDictionary<Type, HandlerInvoker>
+			HandlerInvokers = new();
 
 		private static HandlerInvoker GetHandlerInvoker(Type commandType) =>
 			HandlerInvokers.GetOrAdd(commandType, NewHandlerInvoker);
@@ -98,8 +99,8 @@ namespace K4os.RoutR.Internals
 			object handler, object command, Func<Task> next,
 			CancellationToken token);
 
-		private static readonly ConcurrentDictionary<Type, PipelineInvoker> PipelineInvokers =
-			new ConcurrentDictionary<Type, PipelineInvoker>();
+		private static readonly ConcurrentDictionary<Type, PipelineInvoker>
+			PipelineInvokers = new();
 
 		private static PipelineInvoker GetPipelineInvoker(Type pipelineType) =>
 			PipelineInvokers.GetOrAdd(pipelineType, NewPipelineInvoker);
@@ -109,8 +110,8 @@ namespace K4os.RoutR.Internals
 			object handler, object command, Func<Task> next,
 			CancellationToken token)
 			where THandler: ICommandHandler<TCommand> =>
-			((ICommandPipeline<THandler, TCommand>) wrapper).Handle(
-				(THandler) handler, (TCommand) command, next, token);
+			((ICommandPipeline<THandler, TCommand>) wrapper)
+			.Handle((THandler) handler, (TCommand) command, next, token);
 
 		private static PipelineInvoker NewPipelineInvoker(Type pipelineType)
 		{

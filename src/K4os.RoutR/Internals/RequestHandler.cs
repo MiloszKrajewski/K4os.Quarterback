@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -36,7 +37,7 @@ namespace K4os.RoutR.Internals
 			var handler = provider.GetRequiredService(handlerType);
 			var actualHandlerType = handler.GetType();
 			var handlerInfo = GetHandlerInfo(requestType, actualHandlerType);
-			var handlerInvoker = handlerInfo.Invoker;
+			var handlerInvoker = handlerInfo.Invoker.Required(nameof(HandlerInfo.Invoker));
 			var responseType = handlerInfo.ResponseType;
 			var pipelineType = GetPipelineType(actualHandlerType, requestType, responseType);
 			var pipeline = provider.GetServices(pipelineType).AsArray();
@@ -44,11 +45,14 @@ namespace K4os.RoutR.Internals
 		}
 
 		private static Task<object> Execute<TRequest>(
-			Type pipelineType, object[] pipeline,
+			Type pipelineType, IReadOnlyList<object> pipeline,
 			object handler, HandlerInvoker handlerInvoker, TRequest request,
 			CancellationToken token)
 		{
-			if (pipeline.Length <= 0)
+			if (request == null)
+				throw new ArgumentNullException(nameof(request));
+
+			if (pipeline.Count <= 0)
 				return handlerInvoker(handler, request, token);
 
 			Func<Task<object>> next = () => handlerInvoker(handler, request, token);
@@ -57,14 +61,14 @@ namespace K4os.RoutR.Internals
 			Func<Task<object>> Combine(object wrapper, Func<Task<object>> rest) =>
 				() => pipelineInvoker(wrapper, handler, request, rest, token);
 
-			for (var i = pipeline.Length - 1; i >= 0; i--)
+			for (var i = pipeline.Count - 1; i >= 0; i--)
 				next = Combine(pipeline[i], next);
 
 			return next();
 		}
 
-		private static readonly ConcurrentDictionary<(Type, Type), Type> HandlerTypes2 =
-			new ConcurrentDictionary<(Type, Type), Type>();
+		private static readonly ConcurrentDictionary<(Type, Type), Type>
+			HandlerTypes2 = new();
 
 		private static Type GetHandlerType(Type requestType, Type responseType) =>
 			HandlerTypes2.GetOrAdd((requestType, responseType), NewHandlerType);
@@ -72,8 +76,8 @@ namespace K4os.RoutR.Internals
 		private static Type NewHandlerType((Type requestType, Type responseType) types) =>
 			typeof(IRequestHandler<,>).MakeGenericType(types.requestType, types.responseType);
 
-		private static readonly ConcurrentDictionary<Type, Type> HandlerTypes1 =
-			new ConcurrentDictionary<Type, Type>();
+		private static readonly ConcurrentDictionary<Type, Type>
+			HandlerTypes1 = new();
 
 		private static Type GetHandlerType(Type requestType) =>
 			HandlerTypes1.GetOrAdd(requestType, NewHandlerType);
@@ -91,7 +95,7 @@ namespace K4os.RoutR.Internals
 			public Type RequestType { get; }
 			public int RequestDistance { get; }
 			public Type ResponseType { get; }
-			public HandlerInvoker Invoker { get; set; }
+			public HandlerInvoker? Invoker { get; set; }
 
 			public HandlerInfo(Type requestType, int requestDistance, Type responseType)
 			{
@@ -101,8 +105,8 @@ namespace K4os.RoutR.Internals
 			}
 		}
 
-		private static readonly ConcurrentDictionary<(Type, Type), HandlerInfo> HandlerInfos =
-			new ConcurrentDictionary<(Type, Type), HandlerInfo>();
+		private static readonly ConcurrentDictionary<(Type, Type), HandlerInfo> 
+			HandlerInfos = new();
 
 		private static HandlerInfo GetHandlerInfo(Type requestType, Type actualHandlerType) =>
 			HandlerInfos.GetOrAdd((requestType, actualHandlerType), NewHandlerInfo);
@@ -111,7 +115,7 @@ namespace K4os.RoutR.Internals
 		{
 			var (requestType, actualHandlerType) = types;
 
-			HandlerInfo TryMatchRequest(Type interfaceType)
+			HandlerInfo? TryMatchRequest(Type interfaceType)
 			{
 				if (!interfaceType.IsGenericType)
 					return null;
@@ -133,7 +137,7 @@ namespace K4os.RoutR.Internals
 			var match = actualHandlerType
 				.GetInterfaces()
 				.Select(TryMatchRequest)
-				.Where(m => m != null)
+				.NoNulls()
 				.MinBy(r => r.RequestDistance);
 
 			if (match is null)
@@ -148,15 +152,17 @@ namespace K4os.RoutR.Internals
 			return match;
 		}
 
-		private static readonly ConcurrentDictionary<(Type, Type), HandlerInvoker> HandlerInvokers =
-			new ConcurrentDictionary<(Type, Type), HandlerInvoker>();
+		private static readonly ConcurrentDictionary<(Type, Type), HandlerInvoker> 
+			HandlerInvokers = new();
 
 		private static HandlerInvoker GetHandlerInvoker(Type requestType, Type responseType) =>
 			HandlerInvokers.GetOrAdd((requestType, responseType), NewHandlerInvoker);
 
-		private static Task<object> UntypedHandlerInvoker<TRequest, TResponse>(
+		private static Task<object?> UntypedHandlerInvoker<TRequest, TResponse>(
 			object handler, object request, CancellationToken token) =>
-			((IRequestHandler<TRequest, TResponse>) handler).Handle((TRequest) request, token).AsObject();
+			((IRequestHandler<TRequest, TResponse>) handler)
+			.Handle((TRequest) request, token)
+			.AsObject();
 
 		private static HandlerInvoker NewHandlerInvoker((Type, Type) types)
 		{
@@ -175,8 +181,8 @@ namespace K4os.RoutR.Internals
 			return lambda.Compile();
 		}
 
-		private static readonly ConcurrentDictionary<(Type, Type, Type), Type> PipelineTypes =
-			new ConcurrentDictionary<(Type, Type, Type), Type>();
+		private static readonly ConcurrentDictionary<(Type, Type, Type), Type>
+			PipelineTypes = new();
 
 		private static Type GetPipelineType(
 			Type handlerType, Type requestType, Type responseType) =>
@@ -185,7 +191,8 @@ namespace K4os.RoutR.Internals
 		private static Type NewPipelineType((Type, Type, Type) types)
 		{
 			var (handlerType, requestType, responseType) = types;
-			return typeof(IRequestPipeline<,,>).MakeGenericType(handlerType, requestType, responseType);
+			return typeof(IRequestPipeline<,,>).MakeGenericType(
+				handlerType, requestType, responseType);
 		}
 
 		private delegate Task<object> PipelineInvoker(
@@ -193,18 +200,19 @@ namespace K4os.RoutR.Internals
 			object handler, object request, Func<Task<object>> next,
 			CancellationToken token);
 
-		private static readonly ConcurrentDictionary<Type, PipelineInvoker> PipelineInvokers =
-			new ConcurrentDictionary<Type, PipelineInvoker>();
+		private static readonly ConcurrentDictionary<Type, PipelineInvoker> 
+			PipelineInvokers = new();
 
 		private static PipelineInvoker GetPipelineInvoker(Type pipelineType) =>
 			PipelineInvokers.GetOrAdd(pipelineType, NewPipelineInvoker);
 
-		private static Task<object> UntypedPipelineInvoker<THandler, TRequest, TResponse>(
+		private static Task<object?> UntypedPipelineInvoker<THandler, TRequest, TResponse>(
 			object wrapper,
 			object handler, object request, Func<Task<object>> next,
 			CancellationToken token) where THandler: IRequestHandler<TRequest, TResponse> =>
-			((IRequestPipeline<THandler, TRequest, TResponse>) wrapper).Handle(
-				(THandler) handler, (TRequest) request, () => next().As<TResponse>(), token).AsObject();
+			((IRequestPipeline<THandler, TRequest, TResponse>) wrapper)
+			.Handle((THandler) handler, (TRequest) request, () => next().As<TResponse>(), token)
+			.AsObject();
 
 		private static PipelineInvoker NewPipelineInvoker(Type pipelineType)
 		{

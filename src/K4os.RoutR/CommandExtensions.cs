@@ -22,7 +22,7 @@ namespace K4os.RoutR
 		{
 			provider.Required(nameof(provider));
 			command.Required(nameof(command));
-			return CommandHandler.Send(provider, typeof(TCommand), command, token);
+			return CommandHandler.Send(provider, typeof(TCommand), command!, token);
 		}
 
 		/// <summary>Send a command to registered handler.</summary>

@@ -4,6 +4,7 @@
     <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
     <AllowUnsafeCode>true</AllowUnsafeCode>
     <LangVersion>default</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\K4os.RoutR.Abstractions\K4os.RoutR.Abstractions.csproj" />

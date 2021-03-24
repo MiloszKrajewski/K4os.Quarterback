@@ -21,7 +21,7 @@ namespace K4os.RoutR
 		{
 			provider.Required(nameof(provider));
 			@event.Required(nameof(@event));
-			return EventHandler.Publish(provider, typeof(TEvent), @event, token);
+			return EventHandler.Publish(provider, typeof(TEvent), @event!, token);
 		}
 
 		/// <summary>Publishes event to all registered compatible handlers.</summary>

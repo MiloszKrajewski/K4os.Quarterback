@@ -25,7 +25,7 @@ namespace K4os.RoutR
 			provider.Required(nameof(provider));
 			request.Required(nameof(request));
 			return RequestHandler
-				.Request(provider, typeof(TRequest), typeof(TResponse), request, token)
+				.Request(provider, typeof(TRequest), typeof(TResponse), request!, token)
 				.As<TResponse>();
 		}
 
