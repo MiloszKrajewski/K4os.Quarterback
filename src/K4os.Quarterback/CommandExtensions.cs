@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using K4os.Quarterback.Internals;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace K4os.Quarterback
 {
