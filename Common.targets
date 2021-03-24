@@ -15,7 +15,7 @@
     <PackageLicenseUrl>https://raw.githubusercontent.com/MiloszKrajewski/K4os.Quarterback/main/LICENSE</PackageLicenseUrl>
     <PackageTags>CQRS message mediator broker</PackageTags>
     <!--
-    <PackageIconUrl>https://.../K4os.RoutR/icon.png</PackageIconUrl>
+    <PackageIconUrl>https://.../K4os.Quarterback/icon.png</PackageIconUrl>
     -->
   </PropertyGroup>
   <ItemGroup>
