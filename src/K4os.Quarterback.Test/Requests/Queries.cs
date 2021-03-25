@@ -1,4 +1,4 @@
-namespace K4os.RoutR.Test.Requests
+namespace K4os.Quarterback.Test.Requests
 {
 	public class RequestA { }
 

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace K4os.RoutR.Test
+namespace K4os.Quarterback.Test
 {
 	public interface ILog
 	{

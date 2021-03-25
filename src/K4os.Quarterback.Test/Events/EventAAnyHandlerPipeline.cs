@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using K4os.Quarterback.Abstractions;
 
-namespace K4os.RoutR.Test.Events
+namespace K4os.Quarterback.Test.Events
 {
 	public class EventAAnyHandlerPipeline<THandler>:
 		LoggingHandler, IEventPipeline<THandler, EventA>

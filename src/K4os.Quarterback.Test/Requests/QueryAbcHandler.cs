@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using K4os.Quarterback.Abstractions;
 
-namespace K4os.RoutR.Test.Requests
+namespace K4os.Quarterback.Test.Requests
 {
 	public class RequestAbcHandler:
 		LoggingHandler,

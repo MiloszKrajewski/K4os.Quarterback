@@ -1,4 +1,4 @@
-namespace K4os.RoutR.Test.Commands
+namespace K4os.Quarterback.Test.Commands
 {
 	public class CommandA { }
 	

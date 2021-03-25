@@ -1,4 +1,4 @@
-namespace K4os.RoutR.Test
+namespace K4os.Quarterback.Test
 {
 	public class LoggingHandler
 	{

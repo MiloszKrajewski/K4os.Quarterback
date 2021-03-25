@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 
-namespace K4os.RoutR.Test
+namespace K4os.Quarterback.Test
 {
 	public static class TypeExtensions
 	{

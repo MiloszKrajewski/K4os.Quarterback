@@ -4,7 +4,7 @@ using DryIoc;
 using K4os.Quarterback;
 using Xunit;
 
-namespace K4os.RoutR.Test.Events
+namespace K4os.Quarterback.Test.Events
 {
 	public class EventTests
 	{

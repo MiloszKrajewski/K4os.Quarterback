@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <RootNamespace>K4os.RoutR.Test</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\K4os.Quarterback\K4os.Quarterback.csproj" />

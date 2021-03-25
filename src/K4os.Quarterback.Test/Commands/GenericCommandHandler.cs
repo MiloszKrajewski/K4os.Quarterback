@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using K4os.Quarterback.Abstractions;
 
-namespace K4os.RoutR.Test.Commands
+namespace K4os.Quarterback.Test.Commands
 {
 	public class GenericCommandHandler<TCommand>:
 		LoggingHandler, ICommandHandler<TCommand>

@@ -5,7 +5,7 @@ using K4os.Quarterback;
 using K4os.Quarterback.Abstractions;
 using Xunit;
 
-namespace K4os.RoutR.Test.Commands
+namespace K4os.Quarterback.Test.Commands
 {
 	public class CommandTests
 	{

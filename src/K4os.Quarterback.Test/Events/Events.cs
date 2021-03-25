@@ -1,4 +1,4 @@
-namespace K4os.RoutR.Test.Events
+namespace K4os.Quarterback.Test.Events
 {
 	public class EventA { }
 

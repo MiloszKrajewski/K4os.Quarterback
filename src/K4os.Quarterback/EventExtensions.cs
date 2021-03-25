@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using K4os.Quarterback.Internals;
 using EventHandler = K4os.Quarterback.Internals.EventHandler;
 
 namespace K4os.Quarterback
