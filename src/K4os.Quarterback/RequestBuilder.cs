@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using K4os.Quarterback.Abstractions;
 
 namespace K4os.Quarterback
 {
@@ -8,16 +9,12 @@ namespace K4os.Quarterback
 	/// Helper class to build request and specify expected result type.
 	/// </summary>
 	/// <typeparam name="TResponse"></typeparam>
-	public readonly struct RequestBuilder<TResponse>
+	internal readonly struct RequestBuilder<TResponse>: IRequestBuilder<TResponse>
 	{
 		private readonly IServiceProvider _provider;
 
-		internal RequestBuilder(IServiceProvider provider)
-		{
+		internal RequestBuilder(IServiceProvider provider) =>
 			_provider = provider.Required(nameof(provider));
-		}
-
-		private IServiceProvider Provider => _provider.Required(nameof(Provider));
 
 		/// <summary>Calls registered request handler.</summary>
 		/// <param name="request">Request.</param>
@@ -25,7 +22,7 @@ namespace K4os.Quarterback
 		/// <typeparam name="TRequest">Type of request (determines handler)</typeparam>
 		/// <returns>Handler's response.</returns>
 		public Task<TResponse> Request<TRequest>(
-			TRequest request, CancellationToken token = default) => 
-			Provider.Request<TRequest, TResponse>(request, token);
+			TRequest request, CancellationToken token = default) =>
+			_provider.Request<TRequest, TResponse>(request, token);
 	}
 }

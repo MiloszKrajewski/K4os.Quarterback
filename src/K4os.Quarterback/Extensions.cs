@@ -34,13 +34,13 @@ namespace K4os.Quarterback
 			where R: IComparable<R>
 		{
 			var first = true;
-			var result = default(T);
-			var resultScore = default(R);
+			var result = default(T?);
+			var resultScore = default(R)!;
 
 			foreach (var item in collection)
 			{
 				var itemScore = score(item);
-				var replace = first || itemScore.CompareTo(resultScore!) < 0;
+				var replace = first || itemScore.CompareTo(resultScore) < 0;
 				if (!replace) continue;
 
 				result = item;

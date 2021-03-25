@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DryIoc.Microsoft.DependencyInjection;
 using K4os.Quarterback;
+using K4os.Quarterback.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -20,7 +21,7 @@ namespace K4os.Quarterback.Test.Scopes
 			_container.RegisterMany(
 				new[] { typeof(TestHandler), typeof(TestPipeline) }, 
 				Reuse.Transient);
-			_container.Register<IQuarterback, Quarterback>(Reuse.Transient);
+			_container.Register<IMediator, Mediator.QuarterbackMediator>(Reuse.Transient);
 		}
 
 		[Fact]
@@ -151,9 +152,9 @@ namespace K4os.Quarterback.Test.Scopes
 			var message2 = new TestCommand();
 			var message3 = new TestCommand();
 
-			var qb1A = scope1.GetRequiredService<IQuarterback>();
-			var qb2 = scope2.GetRequiredService<IQuarterback>();
-			var qb1B = scope1.GetRequiredService<IQuarterback>();
+			var qb1A = scope1.GetRequiredService<IMediator>();
+			var qb2 = scope2.GetRequiredService<IMediator>();
+			var qb1B = scope1.GetRequiredService<IMediator>();
 
 			await qb1A.Send(message1);
 			await qb2.Send(message2);

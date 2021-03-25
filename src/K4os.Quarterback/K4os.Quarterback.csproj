@@ -7,9 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\K4os.Quarterback.Abstractions\K4os.Quarterback.Abstractions.csproj" />
+    <ProjectReference Include="..\K4os.Quarterback.Abstractions\K4os.Quarterback.Abstractions.csproj"/>
   </ItemGroup>
-  <Import Project="..\..\Common.targets" />
-  <Import Project="..\..\Signing.targets" />
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
+  <Import Project="..\..\Common.targets"/>
+  <Import Project="..\..\Signing.targets"/>
+  <Import Project="..\..\.paket\Paket.Restore.targets"/>
 </Project>

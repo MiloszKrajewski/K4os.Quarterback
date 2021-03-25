@@ -1,3 +1,7 @@
+## 0.0.4 (2021/03/25)
+* IMediator added to abstractions
+* QuarterbackMediator implements IMediator  
+
 ## 0.0.3 (2021/03/25)
 * Project renamed to K4os.Quarterback
 * Added IQuarterback interface for clarity

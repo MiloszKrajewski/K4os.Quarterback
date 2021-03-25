@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using K4os.Quarterback.Abstractions;
 using K4os.Quarterback.Internals;
 
 namespace K4os.Quarterback
@@ -69,7 +70,7 @@ namespace K4os.Quarterback
 		/// <param name="provider">Service provider.</param>
 		/// <typeparam name="TResponse">Expected response type.</typeparam>
 		/// <returns>Request builder.</returns>
-		public static RequestBuilder<TResponse> Expecting<TResponse>(
+		public static IRequestBuilder<TResponse> Expecting<TResponse>(
 			this IServiceProvider provider) =>
 			new RequestBuilder<TResponse>(provider);
 	}
