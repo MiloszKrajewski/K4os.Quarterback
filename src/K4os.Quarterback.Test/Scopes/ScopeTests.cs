@@ -3,7 +3,6 @@ using DryIoc;
 using System.Linq;
 using System.Threading.Tasks;
 using DryIoc.Microsoft.DependencyInjection;
-using K4os.Quarterback;
 using K4os.Quarterback.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -12,7 +11,7 @@ namespace K4os.Quarterback.Test.Scopes
 {
 	public class ScopeTests
 	{
-		private readonly Container _container = new Container();
+		private readonly Container _container = new();
 
 		public ScopeTests()
 		{
@@ -21,7 +20,7 @@ namespace K4os.Quarterback.Test.Scopes
 			_container.RegisterMany(
 				new[] { typeof(TestHandler), typeof(TestPipeline) }, 
 				Reuse.Transient);
-			_container.Register<IMediator, Mediator.QuarterbackMediator>(Reuse.Transient);
+			_container.Register<IBroker, Classic.Quarterback>(Reuse.Transient);
 		}
 
 		[Fact]
@@ -152,9 +151,9 @@ namespace K4os.Quarterback.Test.Scopes
 			var message2 = new TestCommand();
 			var message3 = new TestCommand();
 
-			var qb1A = scope1.GetRequiredService<IMediator>();
-			var qb2 = scope2.GetRequiredService<IMediator>();
-			var qb1B = scope1.GetRequiredService<IMediator>();
+			var qb1A = scope1.GetRequiredService<IBroker>();
+			var qb2 = scope2.GetRequiredService<IBroker>();
+			var qb1B = scope1.GetRequiredService<IBroker>();
 
 			await qb1A.Send(message1);
 			await qb2.Send(message2);

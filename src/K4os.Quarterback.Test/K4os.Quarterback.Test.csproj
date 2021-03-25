@@ -5,7 +5,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\K4os.Quarterback.Mediator\K4os.Quarterback.Mediator.csproj" />
+    <ProjectReference Include="..\K4os.Quarterback.Classic\K4os.Quarterback.Classic.csproj" />
     <ProjectReference Include="..\K4os.Quarterback\K4os.Quarterback.csproj" />
   </ItemGroup>
   <Import Project="..\..\Common.targets" />

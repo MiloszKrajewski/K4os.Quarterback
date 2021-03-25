@@ -3,24 +3,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using K4os.Quarterback.Abstractions;
 
-namespace K4os.Quarterback.Mediator
+namespace K4os.Quarterback.Classic
 {
 	/// <summary>
-	/// Default implementation for <see cref="IMediator"/>.
+	/// Default implementation for <see cref="IBroker"/>.
 	/// Wraps around given <see cref="IServiceProvider"/>.
 	/// It could be called Thomas as default quarterback but this reference
 	/// could be a little bit obscure.
 	/// </summary>
-	public class QuarterbackMediator: IMediator
+	public class Quarterback: IBroker
 	{
 		private readonly IServiceProvider _provider;
 
 		/// <summary>
-		/// Creates default implementation of <see cref="IMediator"/>.
+		/// Creates default implementation of <see cref="IBroker"/>.
 		/// All dependencies will be resolved in passed scope. 
 		/// </summary>
 		/// <param name="provider"></param>
-		public QuarterbackMediator(IServiceProvider provider) =>
+		public Quarterback(IServiceProvider provider) =>
 			_provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
 		/// <inheritdoc />
@@ -50,7 +50,8 @@ namespace K4os.Quarterback.Mediator
 			_provider.Request(request, token);
 
 		/// <inheritdoc />
-		public Task<object> RequestAny(object request, CancellationToken token = default) =>
+		public Task<object> RequestAny(
+			object request, CancellationToken token = default) =>
 			_provider.RequestAny(request, token);
 
 		/// <inheritdoc />

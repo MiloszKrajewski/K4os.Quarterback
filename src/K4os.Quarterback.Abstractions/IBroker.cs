@@ -7,7 +7,7 @@ namespace K4os.Quarterback.Abstractions
 	/// <summary>
 	/// Abstraction over mediator pattern.
 	/// </summary>
-	public interface IMediator
+	public interface IBroker
 	{
 		/// <summary>Send a command to registered handler.</summary>
 		/// <param name="command">Command.</param>
