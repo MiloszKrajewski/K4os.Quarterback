@@ -20,7 +20,7 @@ namespace K4os.Quarterback.Test.Scopes
 			_container.RegisterMany(
 				new[] { typeof(TestHandler), typeof(TestPipeline) }, 
 				Reuse.Transient);
-			_container.Register<IBroker, Classic.Quarterback>(Reuse.Transient);
+			_container.Register<IBroker, Broker>(Reuse.Transient);
 		}
 
 		[Fact]

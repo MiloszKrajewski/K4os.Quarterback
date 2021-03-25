@@ -3,15 +3,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using K4os.Quarterback.Abstractions;
 
-namespace K4os.Quarterback.Classic
+namespace K4os.Quarterback
 {
 	/// <summary>
 	/// Default implementation for <see cref="IBroker"/>.
 	/// Wraps around given <see cref="IServiceProvider"/>.
-	/// It could be called Thomas as default quarterback but this reference
-	/// could be a little bit obscure.
+	/// It could be called Thomas as a default quarterback but this reference
+	/// could be a little bit too obscure.
 	/// </summary>
-	public class Quarterback: IBroker
+	public class Broker: IBroker
 	{
 		private readonly IServiceProvider _provider;
 
@@ -20,7 +20,7 @@ namespace K4os.Quarterback.Classic
 		/// All dependencies will be resolved in passed scope. 
 		/// </summary>
 		/// <param name="provider"></param>
-		public Quarterback(IServiceProvider provider) =>
+		public Broker(IServiceProvider provider) =>
 			_provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
 		/// <inheritdoc />
