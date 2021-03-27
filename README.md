@@ -62,7 +62,7 @@ public interface IRequestHandler<in TRequest, TResponse>
 }
 ```
 
-(NOTE: if you are very careful you may notice that `TResponse` could be a contravariant, 
+(NOTE: if you read carefully you may notice that `TResponse` could be a covariant, 
 I mean like in `IRequestHandler<in TRequest, out TResponse>`, but unfortunately this does 
 not work with `Task<T>`).
 
