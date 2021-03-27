@@ -11,6 +11,8 @@ nuget Microsoft.Extensions.Logging.Abstractions ~> 2
 nuget System.Reactive
 nuget System.Interactive
 
+nuget MediatR
+
 nuget DryIoc.dll ~> 4
 nuget DryIoc.Microsoft.DependencyInjection ~> 3
 

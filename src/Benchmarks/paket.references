@@ -1,1 +1,4 @@
 ﻿BenchmarkDotNet
+MediatR
+DryIoc.dll
+DryIoc.Microsoft.DependencyInjection

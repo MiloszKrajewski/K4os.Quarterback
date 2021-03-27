@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using K4os.Quarterback.Abstractions;
@@ -44,11 +45,16 @@ namespace K4os.Quarterback.Internals
 		private static Task Execute(
 			Type pipelineType, IReadOnlyList<object> pipeline,
 			object handler, HandlerInvoker handlerInvoker, object @event,
+			CancellationToken token) =>
+			pipeline.Count <= 0 
+				? handlerInvoker(handler, @event, token) 
+				: ExecutePipeline(pipelineType, pipeline, handler, handlerInvoker, @event, token);
+
+		private static Task ExecutePipeline(
+			Type pipelineType, IReadOnlyList<object> pipeline, 
+			object handler, HandlerInvoker handlerInvoker, object @event, 
 			CancellationToken token)
 		{
-			if (pipeline.Count <= 0)
-				return handlerInvoker(handler, @event, token);
-
 			Func<Task> next = () => handlerInvoker(handler, @event, token);
 			var pipelineInvoker = GetPipelineInvoker(pipelineType);
 
@@ -64,7 +70,9 @@ namespace K4os.Quarterback.Internals
 		private static readonly ConcurrentDictionary<Type, Type>
 			HandlerTypes = new();
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static Type GetHandlerType(Type eventType) =>
+			HandlerTypes.GetOrNull(eventType) ??
 			HandlerTypes.GetOrAdd(eventType, NewHandleType);
 
 		private static Type NewHandleType(Type eventType) =>
@@ -73,8 +81,14 @@ namespace K4os.Quarterback.Internals
 		private static readonly ConcurrentDictionary<(Type, Type), Type>
 			PipelineTypes = new();
 
-		private static Type GetPipelineType(Type handlerType, Type eventType) =>
-			PipelineTypes.GetOrAdd((handlerType, eventType), NewPipelineType);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static Type GetPipelineType(Type handlerType, Type eventType) => 
+			GetPipelineType((handlerType, eventType));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static Type GetPipelineType(in (Type handlerType, Type eventType) types) => 
+			PipelineTypes.GetOrNull(types) ?? 
+			PipelineTypes.GetOrAdd(types, NewPipelineType);
 
 		private static Type NewPipelineType((Type handlerType, Type eventType) types) =>
 			typeof(IEventPipeline<,>).MakeGenericType(types.handlerType, types.eventType);
@@ -85,7 +99,9 @@ namespace K4os.Quarterback.Internals
 		private static readonly ConcurrentDictionary<Type, HandlerInvoker>
 			HandlerInvokers = new();
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static HandlerInvoker GetHandlerInvoker(Type eventType) =>
+			HandlerInvokers.GetOrNull(eventType) ??
 			HandlerInvokers.GetOrAdd(eventType, NewHandlerInvoker);
 
 		private static Task UntypedHandlerInvoker<TEvent>(
@@ -116,7 +132,9 @@ namespace K4os.Quarterback.Internals
 		private static readonly ConcurrentDictionary<Type, PipelineInvoker>
 			PipelineInvokers = new();
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static PipelineInvoker GetPipelineInvoker(Type pipelineType) =>
+			PipelineInvokers.GetOrNull(pipelineType) ??
 			PipelineInvokers.GetOrAdd(pipelineType, NewPipelineInvoker);
 
 		private static Task UntypedPipelineInvoker<THandler, TEvent>(
