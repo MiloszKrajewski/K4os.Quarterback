@@ -160,7 +160,7 @@ fake build
 
 # Performance
 
-Performance was not a goal, but it van be measured.
+Performance was not a goal, but it can be measured.
 It seem that **Quarterback** is a little bit faster than **MediatR** when 
 dispatching messages dynamically (~1000ns faster), but a little bit slower 
 for static invocation (~200ns).
