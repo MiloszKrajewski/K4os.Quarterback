@@ -13,6 +13,7 @@ namespace Benchmarks
 			// ProfileQuarterback().Wait();
 		}
 
+		// ReSharper disable once UnusedMember.Local
 		private static async Task ProfileQuarterback()
 		{
 			var sut = new Commands();
