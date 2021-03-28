@@ -56,7 +56,7 @@ interface IEventHandler<in TEvent>
     Task Handle(TEvent @event, CancellationToken token);
 }
 
-public interface IRequestHandler<in TRequest, TResponse>
+interface IRequestHandler<in TRequest, TResponse>
 {
     Task<TResponse> Handle(TRequest request, CancellationToken token);
 }
@@ -83,7 +83,7 @@ Because **Quarterback** does not car when is inside your messages it does not ca
 You can technically send anything you want:
 
 ```c#
-await publisher.Expecting<double>().Request("2+2");
+var result = await publisher.Expecting<double>().Request("2+2");
 ```
 
 This design decision is a trade-off. **Quarterback** cannot validate what and how you send.
