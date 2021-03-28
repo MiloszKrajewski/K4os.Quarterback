@@ -133,7 +133,7 @@ but not for database retry policy, as not every operation is a database operatio
 ```c#
 class WrapperForA: ICommandPipeline<HandlerA, CommandA> { ... }
 class WrapperForB: ICommandPipeline<HandlerB, CommandB> { ... }
-calss WrapperForAll<H, C>: ICommandPipeline<H, C> { ... }
+class WrapperForAll<H, C>: ICommandPipeline<H, C> { ... }
 ```
 
 with "constrained open generics" it possible to wrap only certain handler or command types:
