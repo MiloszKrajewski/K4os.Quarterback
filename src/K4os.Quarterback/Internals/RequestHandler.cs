@@ -195,7 +195,7 @@ namespace K4os.Quarterback.Internals
 			object handler, object request, CancellationToken token) =>
 			((IRequestHandler<TRequest, TResponse>) handler)
 			.Handle((TRequest) request, token)
-			.AsObject();
+			.Box();
 
 		private static HandlerInvoker NewHandlerInvoker(
 			(Type requestType, Type responseType) types)
@@ -255,8 +255,8 @@ namespace K4os.Quarterback.Internals
 			object handler, object request, Func<Task<object>> next,
 			CancellationToken token) where THandler: IRequestHandler<TRequest, TResponse> =>
 			((IRequestPipeline<THandler, TRequest, TResponse>) wrapper)
-			.Handle((THandler) handler, (TRequest) request, () => next().As<TResponse>(), token)
-			.AsObject();
+			.Handle((THandler) handler, (TRequest) request, () => next().Unbox<TResponse>(), token)
+			.Box();
 
 		private static PipelineInvoker NewPipelineInvoker(Type pipelineType)
 		{

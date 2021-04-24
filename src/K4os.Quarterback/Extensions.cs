@@ -22,13 +22,13 @@ namespace K4os.Quarterback
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T Required<T>(this T? subject, string? name = null) where T: struct =>
 			subject ?? throw ShouldNotBeNull(name);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static async Task<T> As<T>(this Task<object> task) => (T) await task;
 		
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static async Task<object?> AsObject<T>(this Task<T> task) => await task;
+		public static async Task<object?> Box<T>(this Task<T> task) => await task;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static async Task<T> Unbox<T>(this Task<object> task) => (T) await task;
+		
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T[] AsArray<T>(this IEnumerable<T>? sequence) =>
 			sequence switch { null => Array.Empty<T>(), T[] a => a, _ => sequence.ToArray() };

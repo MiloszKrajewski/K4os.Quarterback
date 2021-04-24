@@ -27,7 +27,7 @@ namespace K4os.Quarterback
 			request.Required(nameof(request));
 			return RequestHandler
 				.Request(provider, typeof(TRequest), typeof(TResponse), request!, token)
-				.As<TResponse>();
+				.Unbox<TResponse>();
 		}
 
 		/// <summary>

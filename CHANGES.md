@@ -1,3 +1,6 @@
+## 0.0.8 (2021/04/26)
+* Relaxed constraints of "Expecting" (does not affect resolution)
+
 ## 0.0.7 (2021/03/27)
 * Several minor speed improvements
 

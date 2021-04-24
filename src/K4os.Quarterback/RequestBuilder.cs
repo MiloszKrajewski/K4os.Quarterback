@@ -23,6 +23,6 @@ namespace K4os.Quarterback
 		/// <returns>Handler's response.</returns>
 		public Task<TResponse> Request<TRequest>(
 			TRequest request, CancellationToken token = default) =>
-			_provider.Request<TRequest, TResponse>(request, token);
+			_provider.Request(request, token).Unbox<TResponse>();
 	}
 }
