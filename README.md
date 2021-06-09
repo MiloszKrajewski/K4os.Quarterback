@@ -79,7 +79,7 @@ As long a handlers are registered in DI container, messages will be delivered to
 
 Please note, the messages are just classes. What kind of handler is used depends solely on the method
 which was used to send it. There are no `ICommand`, or `IEvent` or `IRequest<TResponse>` interfaces.
-Because **Quarterback** does not car when is inside your messages it does not care what is the type.
+Because **Quarterback** does not care what is inside your messages it does not care what is the type.
 You can technically send anything you want:
 
 ```c#
